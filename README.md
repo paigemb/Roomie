@@ -12,9 +12,7 @@ A personal habit and mood-tracking app built with **SwiftUI** and **SwiftData**.
 
 * **Daily check-ins**
 
-  * Guided symptom and mood questionnaire
-  * McMaster-based mood assessment
-  * Record daily responses alongside habit data
+  *
 
 * **History**
 
@@ -48,15 +46,16 @@ The app uses a SwiftUI-oriented architecture with models, views, and state-drive
 ```text
 RoomyHabits
 ├── Models
-│   ├── MoodEntry
+│   ├── Goal
 │   └── DailyRecord
+    └── Roommate
 │
 ├── Views
 │   ├── ContentView
-│   ├── SetupView
-│   ├── DailyFormView
-│   ├── TodayEntryView
-│   └── HistoryView
+│   ├── StarView
+│   ├── RoommatesScreen
+│   ├── Setupview
+│   └── 
 │
 └── Persistence
     └── SwiftData
