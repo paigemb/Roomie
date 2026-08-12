@@ -1,121 +1,178 @@
-# RoomyHabits
+# RoomyHabits 🌟
 
-A personal habit and mood-tracking app built with **SwiftUI** and **SwiftData**. RoomyHabits combines daily habit tracking with guided mood and symptom check-ins to help users recognize patterns in their routines and well-being over time.
+RoomyHabits is a lightweight iOS habit-tracking app built with **SwiftUI** and **SwiftData**. It turns daily habits into a simple star-based progress system, making it easy to check in each day and see progress throughout the week.
+
+The app focuses on making habit tracking feel encouraging and approachable rather than overwhelming.
 
 ##  Features
 
-* **Daily habit tracking**
+### Personalized Setup
 
-  * Track daily habits and completion progress
-  * Persistent habit data across dates
-  * Star-based habit tracking for a simple, encouraging experience
+When opening the app for the first time, users are guided through a short setup flow where they can:
 
-* **Daily check-ins**
+* Enter their name
+* Create their own habits
+* Add or remove habits
+* Return to the setup flow later to edit their habits
 
-  *
+User preferences are saved locally so they persist between app launches.
 
-* **History**
+###  Daily Habit Tracking
 
-  * Review previous daily entries
-  * Browse mood, symptoms, and habit activity over time
+The main screen displays the user's personalized habits and allows each habit to be completed with a single tap.
 
-* **Onboarding**
+Completed habits are represented by filled stars, while incomplete habits remain outlined.
 
-  * Guided setup flow for new users
-  * Personalize the app with a name and initial habits
+The app keeps track of which habits were completed for each individual day rather than only storing an overall completion count.
 
-* **Native Swift experience**
+###  Date Navigation
 
-  * Built entirely with SwiftUI
-  * Local persistence using SwiftData
-  * Designed around Apple's native navigation and UI patterns
+Users can move between days to review and update their habit progress.
 
-##  Tech Stack
+Each day's completed habits are stored independently, allowing users to look back at previous days without losing their current progress.
 
-| Technology    | Purpose                 |
-| ------------- | ----------------------- |
-| **Swift**     | Application development |
-| **SwiftUI**   | User interface          |
-| **SwiftData** | Local data persistence  |
-| **Xcode**     | Development environment |
+###  Daily Progress
 
-## Architecture
+The app provides a daily summary showing:
 
-The app uses a SwiftUI-oriented architecture with models, views, and state-driven navigation.
+* Number of completed habits
+* Total possible stars
+* Current streak
+
+This gives users an immediate view of how they are doing that day.
+
+###  Weekly Progress
+
+A weekly summary displays each day alongside its completed stars, providing a quick visual overview of progress throughout the week.
+
+The app also calculates a cumulative weekly total based on the number of completed habits.
+
+##  Built With
+
+* **Swift**
+* **SwiftUI**
+* **SwiftData**
+* **UserDefaults**
+* **Xcode**
+
+##  Project Structure
 
 ```text
 RoomyHabits
-├── Models
-│   ├── Goal
-│   └── DailyRecord
-    └── Roommate
+├── RoomyHabitsApp
 │
-├── Views
-│   ├── ContentView
-│   ├── StarView
-│   ├── RoommatesScreen
-│   ├── Setupview
-│   └── 
+├── ContentView
+│   └── Main habit-tracking interface
 │
-└── Persistence
-    └── SwiftData
+├── SetupView
+│   └── User onboarding and habit configuration
+│
+├── DailyRecord
+│   └── SwiftData model for daily habit completion
+│
+├── Goal
+│   └── Lightweight model representing a user habit
+│
+├── StarView
+│   └── Reusable star progress component
+│
+└── WeekRow
+    └── Weekly progress display
 ```
 
-SwiftUI's declarative approach allows the UI to react automatically to changes in the underlying application state, while SwiftData provides persistent storage for user-created records.
+##  Data Persistence
 
-##  App Flow
+RoomyHabits uses **SwiftData** to persist daily habit completion.
 
-```text
-First Launch
-     │
-     ▼
-  Onboarding
-     │
-     ▼
-  Daily Check-In
-     │
-     ├── Symptoms
-     │
-     ├── Mood Assessment
-     │
-     └── Habits
-     │
-     ▼
- Today's Entry
-     │
-     ▼
-   History
+Each `DailyRecord` stores a date along with the IDs of the habits completed that day. This allows the app to maintain a history of daily progress rather than only tracking the current day's state.
+
+```swift
+@Model
+class DailyRecord {
+    var date: Date
+    var completedHabitIDs: [String]
+}
 ```
 
-## Data Persistence
+User-specific preferences, including their name and habit list, are stored separately using `UserDefaults`.
 
-User data is stored locally using **SwiftData**, allowing daily records and habits to persist between app launches.
-
-The data model separates recurring habit information from individual daily records, allowing the app to maintain a history of previous check-ins while continuing to support changing habits over time.
+This combination keeps the data model relatively lightweight while providing persistence across app launches.
 
 ##  Design
 
-RoomyHabits is designed around a simple, approachable interface that makes daily tracking feel lightweight rather than clinical or overwhelming.
+The interface is designed around a soft, playful visual style.
 
-The UI uses:
+The onboarding experience uses:
 
-* SwiftUI navigation
-* Native controls and pickers
-* Rounded cards and components
-* Progress-oriented interactions
-* Guided multi-step forms
-* Responsive layouts for different screen sizes
+* Rounded SwiftUI components
+* Material backgrounds
+* Gradient backgrounds
+* Animated blurred shapes
+* SF Symbols
+* Spring animations
+* Custom colors and typography
 
-## 🚀 Getting Started
+The main tracking screen uses cards, stars, and subtle animations to make daily interactions feel rewarding.
+
+## App Flow
+
+```text
+First Launch
+    │
+    ▼
+Enter Name
+    │
+    ▼
+Learn How It Works
+    │
+    ▼
+Create Habits
+    │
+    ▼
+Daily Habit Tracking
+    │
+    ├── Complete Habits
+    ├── Earn Stars
+    ├── View Daily Progress
+    └── View Weekly Progress
+```
+
+##  Technical Highlights
+
+### SwiftUI State Management
+
+The app uses SwiftUI's state-driven architecture to manage the selected date, habits, completion state, and onboarding flow.
+
+Changing the selected date triggers the app to load the corresponding `DailyRecord`, allowing the UI to update automatically.
+
+### SwiftData
+
+SwiftData provides persistent storage for daily habit records.
+
+The application creates a `ModelContainer` containing the `DailyRecord` model and injects it into the SwiftUI environment:
+
+```swift
+.modelContainer(sharedModelContainer)
+```
+
+### Local User Preferences
+
+Habit names and the user's name are stored using `UserDefaults`, allowing the onboarding information to persist between launches.
+
+### Reusable SwiftUI Components
+
+Small pieces of the interface are separated into reusable components such as `StarView` and `WeekRow`. This keeps the main tracking view focused on application logic while allowing individual UI elements to be independently styled and reused.
+
+##  Getting Started
 
 ### Requirements
 
 * macOS
 * Xcode
-* iOS Simulator or an iOS device
-* A recent version of Swift supporting SwiftData
+* iOS Simulator or a physical iOS device
+* A version of Xcode supporting SwiftData
 
-### Installation
+### Running the App
 
 1. Clone the repository.
 
@@ -127,32 +184,25 @@ git clone <repository-url>
 
 3. Select an iOS Simulator or connected device.
 
-4. Build and run the application.
+4. Build and run the project.
 
-## Future Improvements
+5. Complete the onboarding flow and create your first habits.
 
-Potential future improvements include:
+##  Future Development
 
-* Mood and habit trend visualizations
-* More detailed historical insights
-* Customizable questionnaires
-* Habit reminders and notifications
-* iCloud synchronization
-* Additional widgets
-* Improved accessibility support
+The current project provides the foundation for expanding RoomyHabits into a more comprehensive habit-tracking experience.
 
-##  What I Learned
+Potential future features include:
 
-This project provided hands-on experience with:
+* Habit trends and visualizations
+* Habit sharing
+* A rewards system for earned stars
+* Additional progress insights
+* Notifications and reminders
+* More detailed historical statistics
 
-* Building applications with **SwiftUI**
-* Managing application state using SwiftUI's property wrappers
-* Designing persistent data models with **SwiftData**
-* Creating multi-step onboarding and form experiences
-* Handling relationships between recurring data and daily records
-* Building reusable SwiftUI components
-* Designing a native iOS experience from the ground up
+These features are not currently implemented and represent possible directions for future development.
 
-## 📄 License
+## License
 
-This project is for personal and educational use.
+This project is currently intended as a personal project and portfolio piece.
